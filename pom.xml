@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.pragtics.demos</groupId>
+    <artifactId>spring-boot-windows-executable</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <spring-boot.version>2.1.3.RELEASE</spring-boot.version>
+        <spring-shell.version>2.0.1.RELEASE</spring-shell.version>
+
+        <launch4j.plugin.version>1.7.25</launch4j.plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>${spring-shell.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>${launch4j.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-windows-executable</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <headerType>console</headerType>
+                    <outfile>${project.build.directory}/${artifactId}.exe</outfile>
+                    <jar>${project.build.directory}/${artifactId}-${project.version}.jar</jar>
+                    <errTitle>${artifactId}</errTitle>
+                    <classPath>
+                        <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
+                        <addDependencies>false</addDependencies>
+                        <preCp>anything</preCp>
+                    </classPath>
+                    <jre>
+                        <minVersion>1.8.0</minVersion>
+                    </jre>
+                    <versionInfo>
+                        <fileVersion>${version}.0</fileVersion>
+                        <txtFileVersion>${version}.0</txtFileVersion>
+                        <fileDescription>a description</fileDescription>
+                        <copyright>Pragtics 2019</copyright>
+                        <productVersion>${version}.0</productVersion>
+                        <txtProductVersion>${version}.0</txtProductVersion>
+                        <productName>${artifactId}</productName>
+                        <internalName>${artifactId}</internalName>
+                        <originalFilename>${artifactId}.exe</originalFilename>
+                    </versionInfo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
